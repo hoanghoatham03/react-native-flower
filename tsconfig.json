@@ -6,5 +6,13 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["types/*", "app/"]
+  "include": [
+    "types/*",
+    "app/",
+    "nativewind-env.d.ts",
+    "config/*",
+    "api/*",
+    "components/custom/*",
+    "utils/*"
+  ]
 }
