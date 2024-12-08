@@ -9,7 +9,8 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, onPress }: ProductCardProps) => {
-  const formatPrice = (price: number) => {
+  const formatPrice = (price: number | undefined) => {
+    if (!price) return "0 đ";
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " đ";
   };
 

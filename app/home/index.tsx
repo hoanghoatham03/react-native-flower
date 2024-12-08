@@ -5,6 +5,8 @@ import ProfilePage from "./profile";
 import HomeTab from "./homeTab";
 const Tab = createBottomTabNavigator();
 import AntDesign from "@expo/vector-icons/AntDesign";
+import CartPage from "./cart";
+
 
 const HomePage = () => {
   return (
@@ -20,6 +22,15 @@ const HomePage = () => {
         options={{
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="cart"
+        component={CartPage}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="shoppingcart" color={color} size={size} />
           ),
         }}
       />

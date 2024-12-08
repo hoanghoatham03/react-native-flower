@@ -4,7 +4,7 @@ export default function CartPage() {
   return (
     <View style={styles.container}>
       <View style={styles.main}>
-        <Text style={styles.title}>Home CartPage</Text>
+        <Text style={styles.title}> CartPage</Text>
       </View>
     </View>
   );

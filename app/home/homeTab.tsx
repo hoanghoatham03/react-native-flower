@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, RefreshControl } from "react-native";
+import { View, StyleSheet, RefreshControl, FlatList } from "react-native";
 import { useState, useEffect, useCallback, useRef } from "react";
 import Banner from "@/components/custom/banner";
 import Search from "@/components/custom/search";
@@ -9,12 +9,49 @@ import { Text } from "@/components/ui/text";
 import { getCategories, Category } from "@/api/category";
 import ProductList from "@/components/custom/ProductList";
 import { ProductListRef } from "@/components/custom/ProductList";
+import { useRouter } from "expo-router";
+
+const HomeHeader = ({ categories, onSelectCategory }: { categories: Category[], onSelectCategory: (category: Category) => void }) => (
+  <>
+    <View style={styles.logoContainer}>
+      <MaterialCommunityIcons name="flower-outline" size={24} color="black" />
+      <Text style={styles.logoTitle}>FlowerStore</Text>
+    </View>
+
+    <View style={styles.searchContainer}>
+      <Search />
+    </View>
+
+    <View style={styles.bannerContainer}>
+      <Banner />
+    </View>
+
+    <View style={styles.categoryContainer}>
+      <MaterialIcons name="category" size={24} color="black" />
+      <Text style={styles.categoryTitle}>Categories</Text>
+    </View>
+
+    <View style={styles.categoryListContainer}>
+      <CategoryList
+        categories={categories}
+        onSelectCategory={onSelectCategory}
+      />
+    </View>
+
+    <View style={styles.productListContainer}>
+      <MaterialIcons name="local-florist" size={24} color="black" />
+      <Text style={styles.productListTitle}>Products</Text>
+    </View>
+  </>
+);
 
 const HomeTab = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const productListRef = useRef<ProductListRef>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const router = useRouter();
 
   const loadCategories = async () => {
     try {
@@ -39,62 +76,31 @@ const HomeTab = () => {
   }, []);
 
   const handleSelectCategory = (category: Category) => {
-    console.log("Selected category:", category);
+    router.push(`/home/category/${category.categoryId}?name=${category.categoryName}`);
   };
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-      }
-      stickyHeaderIndices={[1]}
-      onScroll={({ nativeEvent }) => {
-        const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
-        const isCloseToBottom =
-          layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
-
-        if (isCloseToBottom) {
-          productListRef.current?.handleLoadMore();
+    <View style={styles.container}>
+      <FlatList
+        ListHeaderComponent={
+          <HomeHeader 
+            categories={categories} 
+            onSelectCategory={handleSelectCategory}
+          />
         }
-      }}
-      scrollEventThrottle={400}
-    >
-      <View style={styles.logoContainer}>
-        <MaterialCommunityIcons name="flower-outline" size={24} color="black" />
-        <Text style={styles.logoTitle}>FlowerStore</Text>
-      </View>
-
-      <View style={styles.searchContainer}>
-        <Search />
-      </View>
-
-      <View style={styles.bannerContainer}>
-        <Banner />
-      </View>
-
-      <View style={styles.categoryContainer}>
-        <MaterialIcons name="category" size={24} color="black" />
-        <Text style={styles.categoryTitle}>Categories</Text>
-      </View>
-
-      <View style={styles.categoryListContainer}>
-        <CategoryList
-          categories={categories}
-          onSelectCategory={handleSelectCategory}
-        />
-      </View>
-
-      <View style={styles.productListContainer}>
-        <MaterialIcons name="local-florist" size={24} color="black" />
-        <Text style={styles.productListTitle}>Products</Text>
-      </View>
-
-      <View style={styles.productContainer}>
-        <ProductList ref={productListRef} />
-      </View>
-    </ScrollView>
+        data={[]} // Empty array since we're using ProductList separately
+        renderItem={null}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
+        stickyHeaderIndices={[1]}
+        ListFooterComponent={
+          <View style={styles.productContainer}>
+            <ProductList ref={productListRef} categoryId={selectedCategoryId} />
+          </View>
+        }
+      />
+    </View>
   );
 };
 

@@ -17,6 +17,7 @@
     "@gluestack-ui/input": "^0.1.32",
     "@gluestack-ui/nativewind-utils": "^1.0.26",
     "@gluestack-ui/overlay": "^0.1.16",
+    "@gluestack-ui/spinner": "^0.1.15",
     "@gluestack-ui/toast": "^1.0.8",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@tanstack/react-query": "^5.62.3",

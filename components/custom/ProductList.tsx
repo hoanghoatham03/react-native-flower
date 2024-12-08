@@ -6,119 +6,124 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
-import { getProducts, Product } from "@/api/product";
+import { getProducts, getProductByCategoryId, Product } from "@/api/product";
 import ProductCard from "./ProductCard";
+import { useRouter } from "expo-router";
 
 export interface ProductListRef {
   handleRefresh: () => void;
   handleLoadMore: () => void;
 }
 
-const ProductList = forwardRef<ProductListRef>((_, ref) => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const ProductList = forwardRef<ProductListRef, { categoryId: number | null }>(
+  ({ categoryId }, ref) => {
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
 
-  const loadProducts = useCallback(
-    async (pageNo: number, isRefresh = false) => {
-      if ((loading && !isRefresh) || (!hasMore && !isRefresh)) return;
+    const loadProducts = useCallback(
+      async (pageNo: number, isRefresh = false) => {
+        if ((loading && !isRefresh) || (!hasMore && !isRefresh)) return;
 
-      setLoading(true);
-      setError(null);
+        setLoading(true);
+        setError(null);
 
-      try {
-        const response = await getProducts(pageNo, 6);
+        try {
+          const response = categoryId
+            ? await getProductByCategoryId(categoryId, pageNo, 6)
+            : await getProducts(pageNo, 6);
 
-        if (isRefresh) {
-          setProducts(response.data);
-          setPage(1);
-        } else {
-          setProducts((prev) => [...prev, ...response.data]);
-          setPage((prevPage) => prevPage + 1);
+          if (isRefresh) {
+            setProducts(response.data);
+            setPage(1);
+          } else {
+            setProducts((prev) => [...prev, ...response.data]);
+            setPage((prevPage) => prevPage + 1);
+          }
+
+          setHasMore(response.data.length === 6);
+        } catch (error) {
+          console.error("Error loading products:", error);
+          setError("Không thể tải sản phẩm. Vui lòng thử lại.");
+        } finally {
+          setLoading(false);
         }
+      },
+      [loading, hasMore, categoryId]
+    );
 
-        setHasMore(response.data.length === 6);
-      } catch (error) {
-        console.error("Error loading products:", error);
-        setError("Không thể tải sản phẩm. Vui lòng thử lại.");
-      } finally {
-        setLoading(false);
+    useEffect(() => {
+      loadProducts(1, true);
+    }, [categoryId]);
+
+    useImperativeHandle(ref, () => ({
+      handleRefresh: () => loadProducts(1, true),
+      handleLoadMore: () => handleLoadMore(),
+    }));
+
+    const handleLoadMore = () => {
+      if (!loading && hasMore) {
+        loadProducts(page);
       }
-    },
-    [loading, hasMore]
-  );
+    };
 
-  useEffect(() => {
-    loadProducts(1);
-  }, []);
+    const renderFooter = () => {
+      if (loading) {
+        return (
+          <View style={styles.footer}>
+            <ActivityIndicator size="small" color="#ff4d4f" />
+          </View>
+        );
+      }
 
-  useImperativeHandle(ref, () => ({
-    handleRefresh: () => loadProducts(1, true),
-    handleLoadMore: () => handleLoadMore(),
-  }));
+      if (error) {
+        return (
+          <View style={styles.footer}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        );
+      }
 
-  const handleLoadMore = () => {
-    if (!loading && hasMore) {
-      loadProducts(page);
-    }
-  };
+      if (!hasMore) {
+        return (
+          <View style={styles.footer}>
+            <Text style={styles.noMoreText}>Không còn sản phẩm để hiển thị</Text>
+          </View>
+        );
+      }
 
-  const renderFooter = () => {
-    if (loading) {
-      return (
-        <View style={styles.footer}>
-          <ActivityIndicator size="small" color="#ff4d4f" />
-        </View>
-      );
-    }
+      return null;
+    };
 
-    if (error) {
-      return (
-        <View style={styles.footer}>
-          <Text style={styles.errorText}>{error}</Text>
-        </View>
-      );
-    }
+    const handleProductPress = (product: Product) => {
+      router.push(`/home/product/${product.productId}`);
+    };
 
-    if (!hasMore) {
-      return (
-        <View style={styles.footer}>
-          <Text style={styles.noMoreText}>Không còn sản phẩm để hiển thị</Text>
-        </View>
-      );
-    }
-
-    return null;
-  };
-
-  const handleProductPress = (product: Product) => {
-    // Handle product selection
-    console.log("Selected product:", product);
-  };
-
-  return (
-    <FlatList
-      data={products}
-      renderItem={({ item }) => (
-        <View style={styles.productItem}>
-          <ProductCard product={item} onPress={handleProductPress} />
-        </View>
-      )}
-      keyExtractor={(item, index) => `product-${item.productId}-${index}`}
-      numColumns={2}
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.5}
-      ListFooterComponent={renderFooter}
-      contentContainerStyle={styles.container}
-      removeClippedSubviews={true}
-      maxToRenderPerBatch={10}
-      windowSize={21}
-      scrollEnabled={false}
-    />
-  );
-});
+    return (
+      <FlatList
+        data={products}
+        renderItem={({ item }) => (
+          <View style={styles.productItem}>
+            <ProductCard product={item} onPress={handleProductPress} />
+          </View>
+        )}
+        keyExtractor={(item, index) => `product-${item.productId}-${index}`}
+        numColumns={2}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
+        contentContainerStyle={styles.container}
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={10}
+        windowSize={21}
+        showsVerticalScrollIndicator={false}
+      />
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {

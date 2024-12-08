@@ -1,5 +1,9 @@
 import { axiosInstance } from "@/config/axiosConfig";
 
+export interface ProductDetailResponse {
+    data: Product;
+}
+
 export interface Product {
     productId: number;
     productName: string;
@@ -9,7 +13,19 @@ export interface Product {
     discount: number;
     realPrice: number;
     categoryId: number;
+    categoryName?: string;
+    comments?: Comment[];
+    images?: ProductImage[];
     imageUrl: string;
+}
+
+export interface ProductImage {
+    imageId: number;
+    imageUrl: string;
+}
+
+export interface Comment {
+   
 }
 
 export interface ProductResponse {
@@ -26,6 +42,11 @@ export const getProducts = async (pageNo: number, pageSize: number) => {
 
 export const getProductByCategoryId = async (categoryId: number, pageNo: number, pageSize: number) => {
     const res = await axiosInstance.get<ProductResponse>(`/products/categories/${categoryId}?pageNo=${pageNo}&pageSize=${pageSize}`);
+    return res.data;
+};
+
+export const getProductById = async (productId: number) => {
+    const res = await axiosInstance.get<ProductDetailResponse>(`/products/${productId}`);
     return res.data;
 };
 
