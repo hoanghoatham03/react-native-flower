@@ -35,7 +35,6 @@ export interface ProductResponse {
 }
 
 export const getProducts = async (pageNo: number, pageSize: number) => {
-    console.log(`/products?pageNo=${pageNo}&pageSize=${pageSize}`);
     const res = await axiosInstance.get<ProductResponse>(`/products?pageNo=${pageNo}&pageSize=${pageSize}`);
     return res.data;
 };

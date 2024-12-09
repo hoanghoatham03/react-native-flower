@@ -8,6 +8,7 @@ interface User {
     lastName: string;
     mobileNumber: string;
     email: string;
+    avatar: string;
 }
 
 interface AuthStore {
