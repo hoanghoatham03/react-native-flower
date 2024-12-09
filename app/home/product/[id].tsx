@@ -201,7 +201,7 @@ const ProductDetailScreen = () => {
           onPress={handleAddToCart}
           disabled={isAddingToCart || !product?.stock}
         >
-          <ButtonText>
+          <ButtonText style={styles.buttonText}>
             {isAddingToCart ? <ButtonSpinner /> : "Add to Cart"}
           </ButtonText>
         </Button>
@@ -347,6 +347,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     gap: 4,
     marginVertical: 4,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    width: 150,
+    textAlign: "center",
   },
 });
 
