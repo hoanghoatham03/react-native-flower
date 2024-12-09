@@ -7,6 +7,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "@/store/authStore";
 import { eventEmitter, CART_UPDATED } from "@/utils/eventEmitter";
+import { Button, ButtonText } from "@/components/ui/button";
 
 export default function CartScreen() {
   const router = useRouter();
@@ -61,6 +62,7 @@ export default function CartScreen() {
 
   return (
     <View style={styles.container}>
+       <Text size="2xl" bold className="px-4 pt-4">My Cart</Text>
       <FlatList
         data={cart.cartItems}
         renderItem={({ item }) => (
@@ -80,6 +82,12 @@ export default function CartScreen() {
           </View>
         )}
       />
+      <Button 
+        onPress={() => router.push("/home/checkout")}
+        className="m-4 bg-primary-600"
+      >
+        <ButtonText>Proceed to Checkout</ButtonText>
+      </Button>
     </View>
   );
 }

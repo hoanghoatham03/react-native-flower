@@ -43,6 +43,7 @@ const ProfilePage = () => {
 
   return (
     <View className="flex-1 bg-white">
+      <Text size="2xl" bold className="px-4 pt-4">My Profile</Text>
       <VStack space="xl" className="p-4">
         <View className="items-center">
           <Avatar size="2xl">

@@ -6,7 +6,8 @@ import HomeTab from "./homeTab";
 const Tab = createBottomTabNavigator();
 import AntDesign from "@expo/vector-icons/AntDesign";
 import CartPage from "./cart";
-
+import OrderPage from "./order";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const HomePage = () => {
   return (
@@ -22,6 +23,15 @@ const HomePage = () => {
         options={{
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="order"
+        component={OrderPage}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="receipt-outline" color={color} size={size} />
           ),
         }}
       />
