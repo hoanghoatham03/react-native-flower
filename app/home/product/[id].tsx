@@ -1,14 +1,31 @@
-import { View, StyleSheet, ScrollView, Image, Dimensions } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Text } from "@/components/ui/text";
 import { useEffect, useState } from "react";
 import { Product, getProductById } from "@/api/product";
-import { TouchableOpacity } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { FlatList } from "react-native";
 import { Spinner } from "@/components/ui/spinner";
 import { APP_COLORS } from "@/utils/appConstant";
 import { Divider } from "@/components/ui/divider";
+import { addToCart } from "@/api/cart";
+import { Button, ButtonText, ButtonSpinner } from "@/components/ui/button";
+import { NumericInput } from "@/components/custom/numeric-input";
+import { useAuthStore } from "@/store/authStore";
+import {
+  useToast,
+  Toast,
+  ToastTitle,
+  ToastDescription,
+} from "@/components/ui/toast";
+import { eventEmitter, CART_UPDATED } from "@/utils/eventEmitter";
 
 const { width } = Dimensions.get("window");
 
@@ -18,6 +35,10 @@ const ProductDetailScreen = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const { user } = useAuthStore();
+  const toast = useToast();
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -37,6 +58,41 @@ const ProductDetailScreen = () => {
   const formatPrice = (price: number | undefined) => {
     if (!price) return "0 đ";
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " đ";
+  };
+
+  const handleAddToCart = async () => {
+    if (!product) return;
+    try {
+      setIsAddingToCart(true);
+      await addToCart(
+        user?.userId as unknown as number,
+        product.productId,
+        quantity
+      );
+      eventEmitter.emit(CART_UPDATED);
+      toast.show({
+        placement: "top",
+        render: () => (
+          <Toast action="success">
+            <ToastTitle>Success</ToastTitle>
+            <ToastDescription>Item added to cart successfully</ToastDescription>
+          </Toast>
+        ),
+      });
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.show({
+        placement: "top",
+        render: () => (
+          <Toast action="error">
+            <ToastTitle>Error</ToastTitle>
+            <ToastDescription>Failed to add item to cart</ToastDescription>
+          </Toast>
+        ),
+      });
+    } finally {
+      setIsAddingToCart(false);
+    }
   };
 
   if (loading || !product) {
@@ -96,6 +152,13 @@ const ProductDetailScreen = () => {
         )}
         <View style={styles.content}>
           <Text style={styles.productName}>{product.productName}</Text>
+          <View style={styles.ratingContainer}>
+            <AntDesign name="star" size={16} color="gold" />
+            <AntDesign name="star" size={16} color="gold" />
+            <AntDesign name="star" size={16} color="gold" />
+            <AntDesign name="star" size={16} color="gold" />
+            <AntDesign name="staro" size={16} color="gold" />
+          </View>
           <View style={styles.priceContainer}>
             <Text style={styles.realPrice}>
               {formatPrice(product.realPrice)}
@@ -125,6 +188,24 @@ const ProductDetailScreen = () => {
           </View>
         </View>
       </ScrollView>
+      <View style={styles.footer}>
+        <NumericInput
+          minValue={1}
+          maxValue={100}
+          value={quantity}
+          onChange={(v) => {
+            setQuantity(v);
+          }}
+        />
+        <Button
+          onPress={handleAddToCart}
+          disabled={isAddingToCart || !product?.stock}
+        >
+          <ButtonText>
+            {isAddingToCart ? <ButtonSpinner /> : "Add to Cart"}
+          </ButtonText>
+        </Button>
+      </View>
     </View>
   );
 };
@@ -176,7 +257,6 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
-    
   },
   productName: {
     fontSize: 24,
@@ -237,15 +317,36 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   descriptionContainer: {
-    marginBottom: 8,
+    marginBottom: 40,
+    marginTop: 4,
   },
   descriptionLabel: {
     fontWeight: "bold",
-    marginBottom: 8,
   },
   description: {
     color: "#666",
     lineHeight: 20,
+  },
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "white",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
+  },
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    gap: 4,
+    marginVertical: 4,
   },
 });
 
