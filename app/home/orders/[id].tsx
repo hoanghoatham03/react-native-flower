@@ -1,19 +1,30 @@
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/authStore";
-import { getOrderDetails } from "@/api/order";
+import { getOrderDetails, deleteOrder } from "@/api/order";
 import { Spinner } from "@/components/ui/spinner";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { OrderDetails } from "@/api/order";
 import { Divider } from "@/components/ui/divider";
+import { Button, ButtonText, ButtonSpinner } from "@/components/ui/button";
+import {
+  useToast,
+  Toast,
+  ToastTitle,
+  ToastDescription,
+} from "@/components/ui/toast";
+import { Feather } from "@expo/vector-icons";
 
 const OrderDetailsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { user } = useAuthStore();
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
   const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
+  const toast = useToast();
 
   useEffect(() => {
     loadOrderDetails();
@@ -28,6 +39,39 @@ const OrderDetailsPage = () => {
     } catch (error) {
       console.error("Error loading order details:", error);
     } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteOrder = async () => {
+    if (!user?.userId || !id) return;
+    try {
+      setIsLoading(true)
+      setIsDeleting(true);
+      await deleteOrder(Number(user.userId), Number(id));
+      toast.show({
+        placement: "top",
+        render: () => (
+          <Toast action="success">
+            <ToastTitle>Success</ToastTitle>
+            <ToastDescription>Order deleted successfully</ToastDescription>
+          </Toast>
+        ),
+      });
+      router.replace("/home/order");
+    } catch (error) {
+      console.error("Error deleting order:", error);
+      toast.show({
+        placement: "top",
+        render: () => (
+          <Toast action="error">
+            <ToastTitle>Error</ToastTitle>
+            <ToastDescription>Failed to delete order</ToastDescription>
+          </Toast>
+        ),
+      });
+    } finally {
+      setIsDeleting(false);
       setIsLoading(false);
     }
   };
@@ -51,9 +95,21 @@ const OrderDetailsPage = () => {
   return (
     <ScrollView className="flex-1 bg-white">
       <VStack space="xl" className="p-4">
-        <Text size="2xl" bold>
-          Order Details
-        </Text>
+        <View className="flex-row justify-between items-center">
+          <Text size="2xl" bold>
+            Order Details
+          </Text>
+          <TouchableOpacity 
+            onPress={handleDeleteOrder}
+            disabled={isDeleting || orderDetails.orderStatus !== "PENDING"}
+          >
+            <Feather 
+              name="trash-2" 
+              size={24} 
+              color={orderDetails.orderStatus === "PENDING" ? "red" : "gray"} 
+            />
+          </TouchableOpacity>
+        </View>
 
         <VStack space="md" className="bg-gray-100 p-4 rounded-lg">
           <Text bold>Order #{orderDetails.orderId}</Text>

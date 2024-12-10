@@ -1,13 +1,14 @@
 import { View, ScrollView, TouchableOpacity } from "react-native";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { getOrder } from "@/api/order";
 import { Spinner } from "@/components/ui/spinner";
 import { Order } from "@/api/order";
 import { useRouter } from "expo-router";
 import { Divider } from "@/components/ui/divider";
+import { useFocusEffect } from "@react-navigation/native";
 
 const OrdersPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -31,6 +32,12 @@ const OrdersPage = () => {
       setIsLoading(false);
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      loadOrders();
+    }, [user?.userId])
+  );
 
   return (
     <View className="flex-1 bg-white">

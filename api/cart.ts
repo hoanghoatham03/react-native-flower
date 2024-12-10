@@ -36,9 +36,6 @@ export const getCart = async (userId: number) => {
 
 export const addToCart = async (userId: number, productId: number, quantity: number) => {
     const token = await getToken();
-    console.log("productId", productId);
-    console.log("quantity", quantity);
-    console.log("token add to cart", token);
     if (!token) {
         throw new Error("User not authenticated");
     }
@@ -55,10 +52,6 @@ export const addToCart = async (userId: number, productId: number, quantity: num
 
 export const updateCartItem = async (userId: number, productId: number, quantity: number) => {
     const token = await getToken();
-    console.log("token update cart item", token);
-    console.log("userId update cart item", userId);
-    console.log("productId update cart item", productId);
-    console.log("quantity update cart item", quantity);
     if (!token) {
         throw new Error("User not authenticated");
     }

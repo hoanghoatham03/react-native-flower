@@ -18,7 +18,6 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 
 const ProfilePage = () => {
   const { user, setUser, setToken } = useAuthStore();
-  console.log("user", user);
   const router = useRouter();
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
