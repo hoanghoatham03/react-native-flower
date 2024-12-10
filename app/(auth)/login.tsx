@@ -1,5 +1,12 @@
 import { useRouter } from "expo-router";
-import { ImageBackground, Keyboard, View,Image,Dimensions} from "react-native";
+import {
+  ImageBackground,
+  Keyboard,
+  View,
+  Image,
+  Dimensions,
+  StyleSheet,
+} from "react-native";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { Input, InputField, InputSlot } from "@/components/ui/input";
@@ -12,6 +19,7 @@ import {
   FormControlError,
   FormControlErrorText,
 } from "@/components/ui/form-control";
+
 import Feather from "@expo/vector-icons/Feather";
 import bg from "@/assets/bg.jpg";
 const { width, height } = Dimensions.get("window");
@@ -54,12 +62,11 @@ const LoginPage = () => {
     setIsLoading(true);
     Keyboard.dismiss();
     try {
-      
       const response = await login(email, password);
-      
+
       setUser(response.data.user); // fix api add user info
       setToken(response.data.ACCESS_TOKEN);
-      
+
       router.push("/home");
     } catch (error) {
       console.log("Error:", error);
@@ -74,6 +81,7 @@ const LoginPage = () => {
 
   return (
     <ImageBackground source={bg} className="flex-1">
+      <View style={styles.overlay}></View>
       <View className="flex-1 justify-start items-center p-4 tb-5">
         <View className="flex-2 w-full max-w-md rounded-2xl p-5 mt-16">
           <VStack space="lg" className="items-center">
@@ -95,6 +103,7 @@ const LoginPage = () => {
                   }}
                   autoCapitalize="none"
                   keyboardType="email-address"
+                  style={styles.inputText}
                 />
               </Input>
               <FormControlError>
@@ -113,6 +122,7 @@ const LoginPage = () => {
                   }}
                   type={showPassword ? "text" : "password"}
                   secureTextEntry={!showPassword}
+                  style={styles.inputText}
                 />
                 <InputSlot
                   className="mx-2"
@@ -135,7 +145,11 @@ const LoginPage = () => {
               isDisabled={isLoading}
               className="bg-[#002D74] w-full rounded-xl mt-8"
             >
-              {isLoading ? <ButtonSpinner /> : <ButtonText>Đăng Nhập</ButtonText>}
+              {isLoading ? (
+                <ButtonSpinner />
+              ) : (
+                <ButtonText>Đăng Nhập</ButtonText>
+              )}
             </Button>
 
             <Text size="md" className="mt-4 text-[#D4DDDB] underline">
@@ -155,33 +169,29 @@ const LoginPage = () => {
             </View>
           </VStack>
         </View>
-        <View>
-        <Image
-            source={require("@/assets/banner1.webp")}
-            
-            style={{ width: width , height: height * 0.15}}
-            resizeMode="contain"
-          />
-        </View>
-        <View>
-        <Image
-            source={require("@/assets/banner2.webp")}
-            className=""
-            style={{ width: width, height: height * 0.2}}
-            resizeMode="contain"
-          />
-        </View>
         <View className="flex-1 w-full justify-end items-center">
-            <Text size="sm" className="text-[#D4DDDB]">
-              © 2023 - All rights reserved.
-            </Text>
-          </View>
+          <Text size="sm" className="text-[#D4DDDB]">
+            © 2023 - All rights reserved.
+          </Text>
+        </View>
       </View>
     </ImageBackground>
-    
   );
-  
 };
 
-export default LoginPage;
+const styles = StyleSheet.create({
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  inputText: {
+    color: "white",
+    height: 50,
+  },
+});
 
+export default LoginPage;
