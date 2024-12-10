@@ -22,7 +22,7 @@ const HomeHeader = ({
   <>
     <View style={styles.logoContainer}>
       <MaterialCommunityIcons name="flower-outline" size={24} color="black" />
-      <Text style={styles.logoTitle}>FlowerStore</Text>
+      <Text style={styles.logoTitle}>Moon Flower</Text>
     </View>
 
     <View style={styles.searchContainer}>

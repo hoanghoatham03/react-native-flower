@@ -5,6 +5,7 @@ import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import bg from "@/assets/bg.jpg";
 import { useRouter } from "expo-router";
+import logoshop from "@/assets/logoshop.png";
 
 export default function WelcomePage() {
   const router = useRouter();
@@ -18,9 +19,7 @@ export default function WelcomePage() {
           </Text>
 
           <Image
-            source={{
-              uri: "https://nhuphuong.net/wp-content/uploads/2021/10/logo-shop-hoa-1024x609.png",
-            }}
+            source={logoshop}
             style={styles.logo}
           />
 
