@@ -3,11 +3,12 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface User {
-    id: string;
+    userId: string;
     firstName: string;
     lastName: string;
     mobileNumber: string;
     email: string;
+    avatar: string;
 }
 
 interface AuthStore {
@@ -32,3 +33,15 @@ export const useAuthStore = create<AuthStore>()(
         },
     ),
 );
+
+export const getToken = () => {
+    return useAuthStore.getState().token;
+};
+
+export const setToken = (token: string) => {
+    useAuthStore.getState().setToken(token);
+};
+
+export const removeToken = () => {
+    useAuthStore.getState().setToken("");
+};

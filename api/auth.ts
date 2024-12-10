@@ -1,5 +1,6 @@
 const API_URL = process.env.EXPO_PUBLIC_FLOWERSTORE_OPENAPI_DEV_URL;
 import { axiosInstance } from "@/config/axiosConfig";
+import { setToken } from "@/store/authStore";
 
 export async function login(email: string, password: string) {
   const res = await axiosInstance.post("/auth/login", { email, password });
@@ -24,7 +25,7 @@ export async function register(
 }
 
 export async function logout() {
-  const res = await axiosInstance.post("/auth/logout");
-  return res.data;
+  setToken("");
+  return "logout success";
 }
 

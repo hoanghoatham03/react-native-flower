@@ -10,12 +10,19 @@ import { getCategories, Category } from "@/api/category";
 import ProductList from "@/components/custom/ProductList";
 import { ProductListRef } from "@/components/custom/ProductList";
 import { useRouter } from "expo-router";
+import { Spinner } from "@/components/ui/spinner";
 
-const HomeHeader = ({ categories, onSelectCategory }: { categories: Category[], onSelectCategory: (category: Category) => void }) => (
+const HomeHeader = ({
+  categories,
+  onSelectCategory,
+}: {
+  categories: Category[];
+  onSelectCategory: (category: Category) => void;
+}) => (
   <>
     <View style={styles.logoContainer}>
       <MaterialCommunityIcons name="flower-outline" size={24} color="black" />
-      <Text style={styles.logoTitle}>FlowerStore</Text>
+      <Text style={styles.logoTitle}>Moon Flower</Text>
     </View>
 
     <View style={styles.searchContainer}>
@@ -50,7 +57,9 @@ const HomeTab = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const productListRef = useRef<ProductListRef>(null);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null
+  );
   const router = useRouter();
 
   const loadCategories = async () => {
@@ -76,30 +85,41 @@ const HomeTab = () => {
   }, []);
 
   const handleSelectCategory = (category: Category) => {
-    router.push(`/home/category/${category.categoryId}?name=${category.categoryName}`);
+    router.push(
+      `/home/category/${category.categoryId}?name=${category.categoryName}`
+    );
   };
 
   return (
     <View style={styles.container}>
-      <FlatList
-        ListHeaderComponent={
-          <HomeHeader 
-            categories={categories} 
-            onSelectCategory={handleSelectCategory}
-          />
-        }
-        data={[]} // Empty array since we're using ProductList separately
-        renderItem={null}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-        }
-        stickyHeaderIndices={[1]}
-        ListFooterComponent={
-          <View style={styles.productContainer}>
-            <ProductList ref={productListRef} categoryId={selectedCategoryId} />
-          </View>
-        }
-      />
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <Spinner size="large" color="rgb(235, 75, 149)" />
+        </View>
+      ) : (
+        <FlatList
+          ListHeaderComponent={
+            <HomeHeader
+              categories={categories}
+              onSelectCategory={handleSelectCategory}
+            />
+          }
+          data={[]} // Empty array since we're using ProductList separately
+          renderItem={null}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
+          stickyHeaderIndices={[1]}
+          ListFooterComponent={
+            <View style={styles.productContainer}>
+              <ProductList
+                ref={productListRef}
+                categoryId={selectedCategoryId}
+              />
+            </View>
+          }
+        />
+      )}
     </View>
   );
 };
@@ -166,6 +186,11 @@ const styles = StyleSheet.create({
   productContainer: {
     flex: 1,
     minHeight: 500,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
