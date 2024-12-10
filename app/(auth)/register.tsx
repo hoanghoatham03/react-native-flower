@@ -221,7 +221,7 @@ const RegisterPage = () => {
             <Button
               onPress={handleRegister}
               isDisabled={isLoading}
-              className="bg-[#002D74] w-full rounded-xl mt-8"
+              className=" w-full rounded-xl mt-8"
             >
               {isLoading ? <ButtonSpinner /> : <ButtonText>Đăng Ký</ButtonText>}
             </Button>
@@ -231,11 +231,11 @@ const RegisterPage = () => {
             </Text>
             <View className="flex-row justify-between items-center w-full mt-4">
               <Text size="md" className="text-[#D4DDDB]">
-                Đã có tài khoản?
+                Bạn đã có tài khoản?
               </Text>
               <Button
                 onPress={() => router.push("/login")}
-                className="bg-[#002D74] py-2 px-4 rounded-xl"
+                className="py-2 px-4 rounded-xl"
               >
                 <ButtonText className="text-white">Đăng Nhập</ButtonText>
               </Button>

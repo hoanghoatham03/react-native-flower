@@ -143,7 +143,7 @@ const LoginPage = () => {
             <Button
               onPress={handleLogin}
               isDisabled={isLoading}
-              className="bg-[#002D74] w-full rounded-xl mt-8"
+              className=" w-full rounded-xl mt-8"
             >
               {isLoading ? (
                 <ButtonSpinner />
@@ -162,7 +162,7 @@ const LoginPage = () => {
               </Text>
               <Button
                 onPress={() => router.push("/register")}
-                className="bg-[#002D74] py-2 px-4 rounded-xl"
+                className=" py-2 px-4 rounded-xl"
               >
                 <ButtonText className="text-white">Đăng Ký</ButtonText>
               </Button>
