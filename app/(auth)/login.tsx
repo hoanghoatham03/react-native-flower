@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { ImageBackground, Keyboard, View,Image} from "react-native";
+import { ImageBackground, Keyboard, View,Image,Dimensions} from "react-native";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { Input, InputField, InputSlot } from "@/components/ui/input";
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form-control";
 import Feather from "@expo/vector-icons/Feather";
 import bg from "@/assets/bg.jpg";
-
+const { width, height } = Dimensions.get("window");
 interface FormErrors {
   email?: string;
   password?: string;
@@ -158,14 +158,16 @@ const LoginPage = () => {
         <View>
         <Image
             source={require("@/assets/banner1.webp")}
-            className="rounded-xl w-auto h-40 mx-auto p-2"
+            
+            style={{ width: width , height: height * 0.15}}
             resizeMode="contain"
           />
         </View>
         <View>
         <Image
             source={require("@/assets/banner2.webp")}
-            className="rounded-xl w-auto h-40 mx-auto p-2"
+            className=""
+            style={{ width: width, height: height * 0.2}}
             resizeMode="contain"
           />
         </View>
