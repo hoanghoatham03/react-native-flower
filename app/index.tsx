@@ -1,10 +1,8 @@
-import { StyleSheet, View, ImageBackground } from "react-native";
-
+import { StyleSheet, View, ImageBackground, Image } from "react-native";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
-import { Divider } from "@/components/ui/divider";
 import bg from "@/assets/bg.jpg";
 import { useRouter } from "expo-router";
 
@@ -13,24 +11,35 @@ export default function WelcomePage() {
 
   return (
     <ImageBackground source={bg} style={styles.container}>
-      <Text size="6xl" bold className="h-1/2 top-40 text-gray-800">
-        Welcome to the app
-      </Text>
-      <HStack style={styles.buttons}>
-        <Button className="w-1/2" onPress={() => router.push("(auth)/login")}>
-          <ButtonText>Log in</ButtonText>
-        </Button>
-        <Button
-          className="w-1/2"
-          onPress={() => router.push("(auth)/register")}
-        >
-          <ButtonText>Sign up</ButtonText>
-        </Button>
-      </HStack>
-      <Divider className="bg-gray-300 my-4" />
-      <Text size="lg" className="text-center w-full">
-        I will sign up later
-      </Text>
+      <View style={styles.rightContainer}>
+        <VStack style={styles.textContainer}>
+          <Text size="4xl" bold style={styles.welcomeText}>
+            Welcome to
+          </Text>
+
+          <Image
+            source={{
+              uri: "https://nhuphuong.net/wp-content/uploads/2021/10/logo-shop-hoa-1024x609.png",
+            }}
+            style={styles.logo}
+          />
+
+          <HStack style={styles.buttons}>
+            <Button
+              style={styles.button}
+              onPress={() => router.push("(auth)/login")}
+            >
+              <ButtonText> Log in </ButtonText>
+            </Button>
+            <Button
+              style={styles.button}
+              onPress={() => router.push("(auth)/register")}
+            >
+              <ButtonText>Sign up</ButtonText>
+            </Button>
+          </HStack>
+        </VStack>
+      </View>
     </ImageBackground>
   );
 }
@@ -38,14 +47,43 @@ export default function WelcomePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "flex-start",
-    justifyContent: "center",
+    flexDirection: "row",
     padding: 24,
+    justifyContent: "center",
+    alignItems: "center",
   },
-
-  buttons: {
+  rightContainer: {
+    width: 250,
+    height: 450,
+    padding: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: "auto",
+  },
+  textContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
     width: "100%",
-    justifyContent: "space-between",
-    gap: 10,
+  },
+  welcomeText: {
+    fontFamily: "Playball",
+    color: "#B04E54",
+    marginBottom: 50,
+    justifyContent: "center",
+    textAlign: "center",
+  },
+  logo: {
+    width: 200,
+    height: 100,
+    marginBottom: 40,
+  },
+  buttons: {
+    flexDirection: "row",
+    gap: 15,
+    marginTop: 40,
+  },
+  button: {
+    width: "45%",
   },
 });
