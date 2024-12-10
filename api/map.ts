@@ -46,10 +46,17 @@ export const getLocationfromAddress = async (address: string) => {
     return data;
 };
 
+export const autoCompleteAddress = async (address: string) => {
+    const url = `https://rsapi.goong.io/autocomplete?address=${encodeURIComponent(address)}&api_key=${API_KEY}`;
+    console.log("AutoComplete URL:", url);
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+};
+
 export const getDistance = async (latitude: number, longitude: number) => {
     try {
         const url = `https://rsapi.goong.io/DistanceMatrix?origins=${encodeURIComponent(latitude)},${encodeURIComponent(longitude)}&destinations=${encodeURIComponent(LOCATION_SHOP.latitude)},${encodeURIComponent(LOCATION_SHOP.longitude)}&vehicle=car&api_key=${API_KEY}`;
-        console.log("Distance URL:", url);
         const response = await fetch(url);
         if (!response.ok) {
             console.error("Distance Response Status:", response.status);
@@ -67,7 +74,6 @@ export const getDistance = async (latitude: number, longitude: number) => {
 export const getDirection = async (latitude: number, longitude: number) => {
     try {
         const url = `https://rsapi.goong.io/Direction?origin=${encodeURIComponent(latitude)},${encodeURIComponent(longitude)}&destination=${encodeURIComponent(LOCATION_SHOP.latitude)},${encodeURIComponent(LOCATION_SHOP.longitude)}&vehicle=car&api_key=${API_KEY}`;
-        console.log("Direction URL:", url);
         const response = await fetch(url);
         if (!response.ok) {
             console.error("Direction Response Status:", response.status);
@@ -78,6 +84,36 @@ export const getDirection = async (latitude: number, longitude: number) => {
         return data;
     } catch (error) {
         console.error("Error in getDirection:", error);
+        return null;
+    }
+};
+
+export const searchPlaces = async (keyword: string) => {
+    try {
+        const url = `https://rsapi.goong.io/Place/AutoComplete?api_key=${API_KEY}&input=${encodeURIComponent(keyword)}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data.predictions || [];
+    } catch (error) {
+        console.error("Error in searchPlaces:", error);
+        return [];
+    }
+};
+
+export const getPlaceDetail = async (placeId: string) => {
+    try {
+        const url = `https://rsapi.goong.io/Place/Detail?place_id=${placeId}&api_key=${API_KEY}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data.result;
+    } catch (error) {
+        console.error("Error in getPlaceDetail:", error);
         return null;
     }
 };

@@ -6,7 +6,7 @@ import * as Location from "expo-location";
 import { LOCATION_SHOP } from "@/utils/appConstant";
 import { getDistance, getDirection } from "@/api/map";
 import { Spinner } from "@/components/ui/spinner";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import polyline from '@mapbox/polyline';
 
@@ -21,29 +21,49 @@ const MapScreen = () => {
   const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const params = useLocalSearchParams<{ 
+    customAddress?: string,
+    customLocation?: string 
+}>();
 
   useEffect(() => {
     (async () => {
       try {
         setIsLoading(true);
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          return;
+        let startLocation;
+
+        if (params.customLocation) {
+          const location = JSON.parse(params.customLocation);
+          startLocation = {
+            coords: {
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }
+          };
+        } else if (params.customAddress) {
+          const address = JSON.parse(params.customAddress);
+          startLocation = {
+            coords: {
+              latitude: address.latitude,
+              longitude: address.longitude,
+            }
+          };
+        } else {
+          const { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== "granted") return;
+          startLocation = await Location.getCurrentPositionAsync({});
         }
 
-        const currentLocation = await Location.getCurrentPositionAsync({});
-        setLocation(currentLocation);
+        setLocation(startLocation as Location.LocationObject);
 
-        // Get distance and duration
         const distanceData = await getDistance(
-          currentLocation.coords.latitude,
-          currentLocation.coords.longitude
+          startLocation.coords.latitude,
+          startLocation.coords.longitude
         );
 
-        // Get route points
         const directionData = await getDirection(
-          currentLocation.coords.latitude,
-          currentLocation.coords.longitude
+          startLocation.coords.latitude,
+          startLocation.coords.longitude
         );
 
         if (directionData && 

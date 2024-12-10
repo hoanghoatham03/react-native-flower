@@ -18,11 +18,13 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
 import * as Location from "expo-location";
 import { getMapfromLocation } from "@/api/map";
+import LocationOptionsModal from "@/components/custom/LocationOptionsModal";
 
 const ProfilePage = () => {
   const { user, setUser, setToken } = useAuthStore();
   const router = useRouter();
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isLocationModalVisible, setIsLocationModalVisible] = useState(false);
 
   useEffect(() => {
     // if (user?.avatar) {
@@ -42,7 +44,7 @@ const ProfilePage = () => {
   };
 
   const handleLocationPress = () => {
-    router.push("/home/map");
+    setIsLocationModalVisible(true);
   };
 
   const name = user?.firstName + " " + user?.lastName;
@@ -111,6 +113,7 @@ const ProfilePage = () => {
         onClose={() => setIsEditModalVisible(false)}
       />
       <View style={styles.locationIconContainer}>
+        <Text className="text-primary-600 font-bold mr-3 mb-8">Go to Shop</Text>
         <Entypo
           style={styles.locationIcon}
           name="location"
@@ -119,6 +122,10 @@ const ProfilePage = () => {
           onPress={handleLocationPress}
         />
       </View>
+      <LocationOptionsModal
+        isVisible={isLocationModalVisible}
+        onClose={() => setIsLocationModalVisible(false)}
+      />
     </View>
   );
 };
@@ -126,6 +133,7 @@ const ProfilePage = () => {
 const styles = StyleSheet.create({
   locationIconContainer: {
     flex: 1,
+    flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "flex-end",
   },
