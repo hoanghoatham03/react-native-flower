@@ -1,5 +1,5 @@
 
 export const APP_COLORS = {
-    primary: "235 75 149",
+    primary: "156, 63, 70",
     secondary: "253 253 253",
 };

@@ -36,12 +36,14 @@ const OrdersPage = () => {
     <View className="flex-1 bg-white">
       {isLoading ? (
         <View className="flex-1 justify-center items-center">
-          <Spinner size="large" color="rgb(235, 75, 149)" />
+          <Spinner size="large" color="rgb(156, 63, 70)" />
         </View>
       ) : (
         <ScrollView>
           <VStack space="md" className="p-4">
-            <Text size="2xl" bold>My Orders</Text>
+            <Text size="2xl" bold>
+              My Orders
+            </Text>
             {orders.map((order: Order) => (
               <TouchableOpacity
                 key={order.orderId}
@@ -65,4 +67,4 @@ const OrdersPage = () => {
   );
 };
 
-export default OrdersPage; 
+export default OrdersPage;

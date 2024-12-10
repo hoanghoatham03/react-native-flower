@@ -35,7 +35,7 @@ const OrderDetailsPage = () => {
   if (isLoading) {
     return (
       <View className="flex-1 justify-center items-center bg-white">
-        <Spinner size="large" color="rgb(235, 75, 149)" />
+        <Spinner size="large" color="rgb(156, 63, 70)" />
       </View>
     );
   }
@@ -51,7 +51,9 @@ const OrderDetailsPage = () => {
   return (
     <ScrollView className="flex-1 bg-white">
       <VStack space="xl" className="p-4">
-        <Text size="2xl" bold>Order Details</Text>
+        <Text size="2xl" bold>
+          Order Details
+        </Text>
 
         <VStack space="md" className="bg-gray-100 p-4 rounded-lg">
           <Text bold>Order #{orderDetails.orderId}</Text>
@@ -71,11 +73,10 @@ const OrderDetailsPage = () => {
 
         <VStack space="md" className="bg-gray-100 p-4 rounded-lg">
           <Text bold>Order Items</Text>
-         
+
           {orderDetails.orderItems.map((item) => (
-            
-            <View key={item.orderItemId} >
-                 <Divider />
+            <View key={item.orderItemId}>
+              <Divider />
               <VStack space="xs" className="flex-row justify-between">
                 <Text>{item.product.productName}</Text>
                 <Text className="text-gray-600">Quantity: {item.quantity}</Text>
@@ -100,4 +101,4 @@ const OrderDetailsPage = () => {
   );
 };
 
-export default OrderDetailsPage; 
+export default OrderDetailsPage;

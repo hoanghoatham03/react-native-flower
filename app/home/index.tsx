@@ -14,7 +14,7 @@ const HomePage = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "rgb(235, 75, 149)",
+        tabBarActiveTintColor: "rgb(156, 63, 70)",
       }}
     >
       <Tab.Screen

@@ -49,3 +49,7 @@ export const getProductById = async (productId: number) => {
     return res.data;
 };
 
+export const getProductByName = async (name: string) => {
+    const res = await axiosInstance.get<ProductResponse>(`/products/search?name=${name}`);
+    return res.data;
+};

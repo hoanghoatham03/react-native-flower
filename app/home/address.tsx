@@ -59,7 +59,7 @@ const AddressPage = () => {
     <View className="flex-1 bg-white">
       {isLoading ? (
         <View className="flex-1 justify-center items-center">
-          <Spinner size="large" color="rgb(235, 75, 149)" />
+          <Spinner size="large" color="rgb(156, 63, 70)" />
         </View>
       ) : (
         <ScrollView>
@@ -75,7 +75,6 @@ const AddressPage = () => {
               >
                 <View className="flex-row justify-between">
                   <VStack space="xs">
-
                     <Text>Street: {address.street}</Text>
                     <Text>District: {address.district}</Text>
                     <Text>City: {address.city}</Text>
@@ -89,7 +88,6 @@ const AddressPage = () => {
                     <TouchableOpacity
                       onPress={() => handleDeleteAddress(address.addressId)}
                     >
-
                       <Feather name="trash-2" size={20} color="red" />
                     </TouchableOpacity>
                   </VStack>

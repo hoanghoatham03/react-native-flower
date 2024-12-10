@@ -25,7 +25,10 @@ export default function CartScreen() {
       setCart(data.data);
     } catch (error) {
       console.error("Error loading cart:", error);
-      if (error instanceof Error && error.message === "User not authenticated") {
+      if (
+        error instanceof Error &&
+        error.message === "User not authenticated"
+      ) {
         router.replace("/auth/login");
       }
     } finally {
@@ -47,7 +50,7 @@ export default function CartScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Spinner size="large" color="rgb(235, 75, 149)" />
+        <Spinner size="large" color="rgb(156, 63, 70)" />
       </View>
     );
   }
@@ -62,7 +65,9 @@ export default function CartScreen() {
 
   return (
     <View style={styles.container}>
-       <Text size="2xl" bold className="px-4 pt-4">My Cart</Text>
+      <Text size="2xl" bold className="px-4 pt-4">
+        My Cart
+      </Text>
       <FlatList
         data={cart.cartItems}
         renderItem={({ item }) => (
@@ -77,12 +82,13 @@ export default function CartScreen() {
           <View style={styles.footer}>
             <Text style={styles.totalLabel}>Total:</Text>
             <Text style={styles.totalPrice}>
-              {cart.totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} đ
+              {cart.totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+              đ
             </Text>
           </View>
         )}
       />
-      <Button 
+      <Button
         onPress={() => router.push("/home/checkout")}
         className="m-4 bg-primary-600"
       >

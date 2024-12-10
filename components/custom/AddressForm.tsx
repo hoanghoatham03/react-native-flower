@@ -94,7 +94,7 @@ const AddressForm = ({ addressId }: AddressFormProps) => {
     <View className="flex-1 bg-white p-4">
       {isLoading ? (
         <View className="flex-1 justify-center items-center">
-          <Spinner size="large" color="rgb(235, 75, 149)" />
+          <Spinner size="large" color="rgb(156, 63, 70)" />
         </View>
       ) : (
         <VStack space="md">

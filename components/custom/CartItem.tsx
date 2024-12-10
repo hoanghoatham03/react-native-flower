@@ -101,7 +101,7 @@ export const CartItem = ({
             maxValue={item.product.stock}
           />
           {loading ? (
-            <Spinner color="rgb(235, 75, 149)" />
+            <Spinner color="rgb(156, 63, 70)" />
           ) : (
             <AntDesign
               name="delete"

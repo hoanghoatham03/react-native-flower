@@ -94,7 +94,7 @@ const HomeTab = () => {
     <View style={styles.container}>
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <Spinner size="large" color="rgb(235, 75, 149)" />
+          <Spinner size="large" color="rgb(156, 63, 70)" />
         </View>
       ) : (
         <FlatList

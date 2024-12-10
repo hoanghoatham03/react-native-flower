@@ -36,7 +36,7 @@ const SelectAddressPage = () => {
   const handleSelectAddress = (address: Address) => {
     router.push({
       pathname: "/home/checkout",
-      params: { selectedAddress: JSON.stringify(address) }
+      params: { selectedAddress: JSON.stringify(address) },
     });
   };
 
@@ -44,12 +44,14 @@ const SelectAddressPage = () => {
     <View className="flex-1 bg-white">
       {isLoading ? (
         <View className="flex-1 justify-center items-center">
-          <Spinner size="large" color="rgb(235, 75, 149)" />
+          <Spinner size="large" color="rgb(156, 63, 70)" />
         </View>
       ) : (
         <ScrollView>
           <VStack space="md" className="p-4">
-            <Text size="2xl" bold>Select Address</Text>
+            <Text size="2xl" bold>
+              Select Address
+            </Text>
 
             {addresses.map((address) => (
               <TouchableOpacity
@@ -71,4 +73,4 @@ const SelectAddressPage = () => {
   );
 };
 
-export default SelectAddressPage; 
+export default SelectAddressPage;
