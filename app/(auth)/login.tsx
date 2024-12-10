@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { ImageBackground, Keyboard, View } from "react-native";
+import { ImageBackground, Keyboard, View,Image} from "react-native";
 import { Button, ButtonSpinner, ButtonText } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { Input, InputField, InputSlot } from "@/components/ui/input";
@@ -74,69 +74,112 @@ const LoginPage = () => {
 
   return (
     <ImageBackground source={bg} className="flex-1">
-      <View className="flex-1 justify-center p-4 bg-white/80">
-        <VStack space="xl">
-          <Text size="2xl" bold className="text-center mb-8">
-            Login to your account
-          </Text>
+      <View className="flex-1 justify-start items-center p-4 tb-5">
+        <View className="flex-2 w-full max-w-md rounded-2xl p-5 mt-16">
+          <VStack space="lg" className="items-center">
+            <Text size="4xl" bold className="text-[#D4DDDB]">
+              Đăng Nhập
+            </Text>
+            <Text size="xl" className="text-[#D4DDDB] mt-2">
+              Nếu đã có tài khoản, đăng nhập dễ dàng
+            </Text>
 
-          <FormControl isInvalid={!!errors.email}>
-            <Input size="xl">
-              <InputField
-                placeholder="Email"
-                value={email}
-                onChangeText={(text) => {
-                  setEmail(text);
-                  setErrors((prev) => ({ ...prev, email: undefined }));
-                }}
-                autoCapitalize="none"
-                keyboardType="email-address"
-              />
-            </Input>
-            <FormControlError>
-              <FormControlErrorText>{errors.email}</FormControlErrorText>
-            </FormControlError>
-          </FormControl>
-
-          <FormControl isInvalid={!!errors.password}>
-            <Input size="xl">
-              <InputField
-                placeholder="Password"
-                value={password}
-                onChangeText={(text) => {
-                  setPassword(text);
-                  setErrors((prev) => ({ ...prev, password: undefined }));
-                }}
-                type={showPassword ? "text" : "password"}
-                secureTextEntry={!showPassword}
-              />
-              <InputSlot
-                className="mx-2"
-                onPress={() => setShowPassword(!showPassword)}
-              >
-                <Feather
-                  name={showPassword ? "eye" : "eye-off"}
-                  size={20}
-                  color="black"
+            <FormControl isInvalid={!!errors.email} className="w-full">
+              <Input size="lg" className="rounded-xl">
+                <InputField
+                  placeholder="Email"
+                  value={email}
+                  onChangeText={(text) => {
+                    setEmail(text);
+                    setErrors((prev) => ({ ...prev, email: undefined }));
+                  }}
+                  autoCapitalize="none"
+                  keyboardType="email-address"
                 />
-              </InputSlot>
-            </Input>
-            <FormControlError>
-              <FormControlErrorText>{errors.password}</FormControlErrorText>
-            </FormControlError>
-          </FormControl>
+              </Input>
+              <FormControlError>
+                <FormControlErrorText>{errors.email}</FormControlErrorText>
+              </FormControlError>
+            </FormControl>
 
-          <Button
-            onPress={handleLogin}
-            isDisabled={isLoading}
-            className="bg-primary-600"
-          >
-            {isLoading ? <ButtonSpinner /> : <ButtonText>Login</ButtonText>}
-          </Button>
-        </VStack>
+            <FormControl isInvalid={!!errors.password} className="w-full">
+              <Input size="lg" className="rounded-xl">
+                <InputField
+                  placeholder="Password"
+                  value={password}
+                  onChangeText={(text) => {
+                    setPassword(text);
+                    setErrors((prev) => ({ ...prev, password: undefined }));
+                  }}
+                  type={showPassword ? "text" : "password"}
+                  secureTextEntry={!showPassword}
+                />
+                <InputSlot
+                  className="mx-2"
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  <Feather
+                    name={showPassword ? "eye" : "eye-off"}
+                    size={20}
+                    color="black"
+                  />
+                </InputSlot>
+              </Input>
+              <FormControlError>
+                <FormControlErrorText>{errors.password}</FormControlErrorText>
+              </FormControlError>
+            </FormControl>
+
+            <Button
+              onPress={handleLogin}
+              isDisabled={isLoading}
+              className="bg-[#002D74] w-full rounded-xl mt-8"
+            >
+              {isLoading ? <ButtonSpinner /> : <ButtonText>Đăng Nhập</ButtonText>}
+            </Button>
+
+            <Text size="md" className="mt-4 text-[#D4DDDB] underline">
+              Quên mật khẩu?
+            </Text>
+
+            <View className="flex-row justify-between items-center w-full mt-4">
+              <Text size="md" className="text-[#D4DDDB]">
+                Nếu bạn không có tài khoản ....
+              </Text>
+              <Button
+                onPress={() => router.push("/register")}
+                className="bg-[#002D74] py-2 px-4 rounded-xl"
+              >
+                <ButtonText className="text-white">Đăng Ký</ButtonText>
+              </Button>
+            </View>
+          </VStack>
+        </View>
+        <View>
+        <Image
+            source={require("@/assets/banner1.webp")}
+            className="rounded-xl w-auto h-40 mx-auto p-2"
+            resizeMode="contain"
+          />
+        </View>
+        <View>
+        <Image
+            source={require("@/assets/banner2.webp")}
+            className="rounded-xl w-auto h-40 mx-auto p-2"
+            resizeMode="contain"
+          />
+        </View>
+        <View className="flex-1 w-full justify-end items-center">
+            <Text size="sm" className="text-[#D4DDDB]">
+              © 2023 - All rights reserved.
+            </Text>
+          </View>
       </View>
     </ImageBackground>
+    
   );
+  
 };
 
 export default LoginPage;
+
